@@ -154,22 +154,9 @@ jobs:
           echo "=== Adding remote: php-ext ==="
           git remote add php-ext "git@github.com:diepxuan/php-ext.git" 2>/dev/null || true
 
-          # Fetch php-ext
-          git fetch php-ext
-
-          # Merge php-ext/main vao main hien tai
-          echo "=== Merging php-ext/main into $REPO_NAME ==="
-          if git merge php-ext/main --allow-unrelated-histories -m "[sync] Sync from php-ext: $COMMIT_MSG"; then
-            echo "Merged php-ext/main into $REPO_NAME"
-          else
-            echo "Merge conflict or no changes, aborting merge"
-            git merge --abort
-            exit 0
-          fi
-
           # Push sang php-ext
           echo "=== Pushing to php-ext ==="
-          if git push php-ext main; then
+          if git push php-ext main --force; then
             echo "Pushed to diepxuan/php-ext from $REPO_NAME"
           else
             echo "Failed to push to diepxuan/php-ext"
