@@ -135,36 +135,6 @@ jobs:
           echo "Sync complete"
 
       - name: Sync to base
-        if: github.repository == 'diepxuan/php-runkit7' || github.repository == 'diepxuan/php-sqlsrv' || github.repository == 'diepxuan/php-pdo_sqlsrv'
-        shell: bash
-        run: |
-          set -e
-
-          REPO_NAME="${{ github.repository }}"
-          REPO_NAME=${REPO_NAME#diepxuan/}
-          COMMIT_MSG="${{ github.event.head_commit.message }}"
-
-          # Bo qua neu la sync commit de tranh loop
-          if echo "$COMMIT_MSG" | grep -q "^\[sync\]"; then
-            echo "Skip sync - this is a sync commit"
-            exit 0
-          fi
-
-          # Them php-ext lam remote
-          echo "=== Adding remote: php-ext ==="
-          git remote add php-ext "git@github.com:diepxuan/php-ext.git" 2>/dev/null || true
-
-          # Push sang php-ext
-          echo "=== Pushing to php-ext ==="
-          if git push php-ext main --force; then
-            echo "Pushed to diepxuan/php-ext from $REPO_NAME"
-          else
-            echo "Failed to push to diepxuan/php-ext"
-          fi
-
-          echo "Sync complete"
-
-      - name: Sync to base
         if: github.repository != 'diepxuan/php-ext'
         shell: bash
         run: |
@@ -197,12 +167,12 @@ jobs:
             exit 0
           fi
 
-          # Push len origin
-          echo "=== Pushing to origin ==="
-          if git push origin main; then
-            echo "Pushed to diepxuan/$REPO_NAME"
+          # Push sang php-ext
+          echo "=== Pushing to php-ext ==="
+          if git push php-ext main; then
+            echo "Pushed to diepxuan/php-ext from $REPO_NAME"
           else
-            echo "Failed to push to diepxuan/$REPO_NAME"
+            echo "Failed to push to diepxuan/php-ext"
           fi
 
           echo "Sync complete"
